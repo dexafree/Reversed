@@ -1,7 +1,5 @@
 package com.dexafree.reversed.model;
 
-import com.dexafree.reversed.components.*;
-
 import java.util.ArrayList;
 
 public class Level {

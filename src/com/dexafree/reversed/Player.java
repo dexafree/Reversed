@@ -1,6 +1,5 @@
 package com.dexafree.reversed;
 
-import com.dexafree.reversed.model.Level;
 import com.dexafree.reversed.model.LevelView;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;

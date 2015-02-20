@@ -19,9 +19,6 @@ public class PlatformView extends BaseView {
     
     public void render(Graphics g){
         g.setColor(Color.green);
-        if(mShape == null){
-            System.out.println("IS NULL");
-        }
         g.fill(mShape);
     }
     
