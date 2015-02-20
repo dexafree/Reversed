@@ -1,0 +1,12 @@
+.gradle
+build/
+gradle-app.setting
+.idea/
+.gradle/
+.out/
+*.iml
+*.properties
+*.build/
+gradle
+out
+library/build
