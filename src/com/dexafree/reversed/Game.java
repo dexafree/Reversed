@@ -2,8 +2,10 @@ package com.dexafree.reversed;
 
 import com.dexafree.reversed.model.Level;
 import com.dexafree.reversed.model.LevelView;
+import com.dexafree.reversed.model.Point;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
 
@@ -14,11 +16,15 @@ public class Game extends BasicGame {
     public static int HEIGHT_SQUARES;
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
-    private final static int STARTING_LEVEL = 0;
+    private final static int STARTING_LEVEL = 2;
     private final static boolean DEBUG_MODE = true;
-    private static boolean DRAW_LINES = false;
+    private final static boolean EDIT_MODE = false;
+    private static boolean DRAW_LINES = true;
+    private static boolean SHOW_OPOSITE = true;
+    
     
     private Circle lastClick;
+    private Rectangle shadow;
     
     private final ArrayList<Level> levels;
 
@@ -44,9 +50,19 @@ public class Game extends BasicGame {
         WIDTH_SQUARES = gc.getWidth() / LINES_SIZE;
         HEIGHT_SQUARES = gc.getHeight() / LINES_SIZE;
 
-        setLevel(gc, STARTING_LEVEL);
-        setPlayer(gc);
+        if(!EDIT_MODE) {
 
+            setLevel(gc, STARTING_LEVEL);
+            setPlayer(gc);
+        } else {
+            setEditMode(gc);
+        }
+
+    }
+    
+    private void setEditMode(GameContainer gc) throws SlickException{
+        currentLevelView = new LevelEditMode(null);
+        currentLevelView.init(gc);
     }
     
     private void setLevel(GameContainer gc, int levelNum) throws SlickException{
@@ -73,22 +89,32 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException {
 
         currentLevelView.render(gc, g);
-        player.render(gc, g);
+        if(!EDIT_MODE) {
+            player.render(gc, g);
+        }
         
         if(!isWin) {
+
+            drawDebugLines(gc, g, LINES_SIZE);
+            showMouseInfo(gc, g);
             
             if(DEBUG_MODE) {
 
-                drawDebugLines(gc, g, LINES_SIZE);
+                if(shadow != null && SHOW_OPOSITE){
+                    g.setColor(Color.cyan);
+                    g.fill(shadow);
+                }
 
                 //showPosition(g);
-                showInfo(gc, g);
+                if(!EDIT_MODE)
+                    showPlayerInfo(g);
                 
                 if(lastClick != null) {
                     g.setColor(Color.red);
                     g.fill(lastClick);
                 }
             }
+            
         } else {
             showWin(gc, g);
             if(currentLevel < levels.size()-1) {
@@ -104,39 +130,51 @@ public class Game extends BasicGame {
     public void update(GameContainer gc, int delta) throws SlickException {
 
         currentLevelView.update(gc, delta);
-        player.update(gc, delta);
+        
+        if(!EDIT_MODE) {
+            player.update(gc, delta);
 
-        timeSinceLastFlip += delta;
+            timeSinceLastFlip += delta;
 
-        if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
-            canFlip = true;
+            if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
+                canFlip = true;
+            }
+
+            if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
+                currentLevelView.invert(gc);
+                player.invert(gc);
+                canFlip = false;
+                timeSinceLastFlip = 0;
+            }
+
+            if (gc.getInput().isKeyDown(Input.KEY_R)) {
+                restartLevel(gc);
+                setPlayer(gc);
+            }
+
+            if (!isWin) {
+                isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
+            }
+
+            if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                int x = gc.getInput().getMouseX();
+                int y = gc.getInput().getMouseY();
+
+                lastClick = new Circle(x, y, 10);
+            }
+            
+            if(DEBUG_MODE){
+                makeOposite(gc);
+            }
+
         }
-
-        if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
-            currentLevelView.invert(gc);
-            player.invert(gc);
-            canFlip = false;
+        if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
+            DRAW_LINES = !DRAW_LINES;
             timeSinceLastFlip = 0;
         }
 
-        if (gc.getInput().isKeyDown(Input.KEY_R)) {
-            restartLevel(gc);
-            setPlayer(gc);
-        }
-
-        if(!isWin){
-            isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
-        }
-        
-        if(gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
-            int x = gc.getInput().getMouseX();
-            int y = gc.getInput().getMouseY();
-            
-            lastClick = new Circle(x, y, 10); 
-        }
-        
-        if(gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME){
-            DRAW_LINES = !DRAW_LINES;
+        if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
+            SHOW_OPOSITE = !SHOW_OPOSITE;
             timeSinceLastFlip = 0;
         }
 
@@ -160,29 +198,56 @@ public class Game extends BasicGame {
         g.drawString("Y: "+player.getY(), 50, 70);
     }
     
-    private void showInfo(GameContainer gc, Graphics g){
+    
+    private void showPlayerInfo(Graphics g){
         if(player.isOnMirror()) {
             g.drawString("FLIP", 50, 40);
         }
         
+    }
+    
+    private void showMouseInfo(GameContainer gc, Graphics g){
         g.setColor(Color.red);
-        
+
         int x = gc.getInput().getMouseX();
         int y = gc.getInput().getMouseY();
-        
+
         g.drawString(x+"", 50, 80);
         g.drawString(y+"", 50, 90);
-        
+
         int squareX = x / LINES_SIZE;
         int squareY = y / LINES_SIZE;
-        
+
         g.drawString(squareX+"", 100, 80);
         g.drawString(squareY+"", 100, 90);
+        
     }
     
     private void showWin(GameContainer gc, Graphics g){
-        g.drawString("WIN", 50, 40);
+        g.setColor(Color.white);
+        if(currentLevelView.areAllObjectsPicked()) {
+            g.drawString("WIN", 50, 40);
+        } else {
+            g.drawString("YOU HAVE NOT PICKED ALL OBJECTS!", 50, 40);
+        }
         
+    }
+    
+    private void makeOposite(GameContainer gc){
+        
+        Point mousePosition = getMousePosition(gc);
+        
+        int invertedX = (gc.getWidth()-mousePosition.x);
+        
+        shadow = new Rectangle(invertedX, (mousePosition.y-(LINES_SIZE/2)), LINES_SIZE, LINES_SIZE);
+        
+    }
+    
+    private Point getMousePosition(GameContainer gc){
+        
+        Input input = gc.getInput();
+        
+        return new Point(input.getMouseX(), input.getMouseY());
     }
 
 }

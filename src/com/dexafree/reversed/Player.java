@@ -1,5 +1,7 @@
 package com.dexafree.reversed;
 
+import com.dexafree.reversed.components.ObjectView;
+import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.LevelView;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -9,6 +11,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+
+import java.util.ArrayList;
 
 public class Player {
 
@@ -24,6 +28,7 @@ public class Player {
 
     private Shape player;
     private LevelView level;
+    private ArrayList<GameObject> inventory;
 
 
     private float vX = 0;
@@ -37,6 +42,7 @@ public class Player {
         int startingX = level.getLevel().getStart().x;
         int startingY = level.getLevel().getStart().y;
         
+        inventory = new ArrayList<GameObject>();
         player = new Rectangle(startingX, startingY ,40,40);
     }
 
@@ -99,7 +105,20 @@ public class Player {
                 vX = 0;
             }
         }
+        
+        checkObjects();
 
+        
+    }
+    
+    private void checkObjects(){
+        
+        ObjectView object = level.isOnObject(player);
+        
+        if(object != null){
+            inventory.add(object.getObject());
+            object.pick();
+        }
         
     }
 

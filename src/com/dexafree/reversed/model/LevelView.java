@@ -18,6 +18,8 @@ public class LevelView {
     private ArrayList<PlatformView> platforms;
     private ArrayList<MirrorView> mirrors;
     private ArrayList<Shape> staticShapes;
+    private ArrayList<MirrorView> staticMirrors;
+    private ArrayList<ObjectView> objects;
     private ExitView exit;
 
     public LevelView(Level level){
@@ -30,6 +32,8 @@ public class LevelView {
         generatePlatforms();
         generateMirrors();
         generateStaticShapes();
+        generateStaticMirrors();
+        generateObjects();
         generateExit();
     }
 
@@ -38,6 +42,8 @@ public class LevelView {
         renderPlatforms(g);
         renderMirrors(g);
         renderStaticShapes(g);
+        renderStaticMirrors(g);
+        renderObjects(g);
 
         exit.render(g);
     }
@@ -88,8 +94,31 @@ public class LevelView {
         }
     }
 
-    protected void generateExit(){
+    private void generateStaticMirrors(){
+
+        staticMirrors = new ArrayList<MirrorView>();
+
+        ArrayList<Mirror> mirrorsModel = level.getStaticMirrors();
+        for(Mirror m : mirrorsModel){
+            staticMirrors.add(new MirrorView(m));
+        }
+    }
+
+    private void generateExit(){
         exit = new ExitView(level.getExit());
+    }
+    
+    private void generateObjects(){
+        
+        objects = new ArrayList<ObjectView>();
+        for(GameObject object : level.getObjects()){
+            
+            ObjectView view = new ObjectView(object);
+            view.init();
+            
+            objects.add(view);
+        }
+        
     }
 
 
@@ -125,6 +154,13 @@ public class LevelView {
                 return true;
             }
         }
+        
+        for(MirrorView m : staticMirrors){
+            if(m.collidesOrContains(s) && !m.isUsed()) {
+                m.use();
+                return true;
+            }
+        }
 
         return false;
 
@@ -137,6 +173,7 @@ public class LevelView {
         invertLevel(gameWidth);
         invertPlatforms(gameWidth);
         invertMirrors(gameWidth);
+        invertObjects(gameWidth);
         invertExit(gameWidth);
 
     }
@@ -160,6 +197,12 @@ public class LevelView {
         }
 
     }
+    
+    private void invertObjects(float gameWidth){
+        for(ObjectView o : objects){
+            o.invert(gameWidth);
+        }
+    }
 
 
     protected void invertExit(float gameWidth){
@@ -179,6 +222,28 @@ public class LevelView {
 
     public boolean isOnExit(Shape s){
         return exit.collidesOrContains(s);
+    }
+    
+    public boolean areAllObjectsPicked(){
+        for(ObjectView o : objects){
+            if(!o.isPicked()){
+                return false;
+            }
+        }
+        return true;
+        
+    }
+    
+    public ObjectView isOnObject(Shape s){
+        
+        for(ObjectView view : objects){
+            if(view.collides(s)){
+                return view;
+            }
+        }
+        
+        return null;
+        
     }
 
     private void renderLevel(Graphics g){
@@ -204,6 +269,20 @@ public class LevelView {
         for(Shape s : staticShapes){
             g.fill(s);
         }
+    }
+
+    private void renderStaticMirrors(Graphics g){
+        g.setColor(Color.lightGray);
+        for(MirrorView s : staticMirrors){
+            g.fill(s.getShape());
+        }
+    }
+    
+    private void renderObjects(Graphics g){
+        for(ObjectView v : objects){
+            v.render(g);
+        }
+        
     }
     
     public Level getLevel(){

@@ -15,7 +15,7 @@ public class Main {
 
         try {
             AppGameContainer app = new AppGameContainer(new Game());
-            app.setDisplayMode(1024, 768, false);
+            app.setDisplayMode(1000, 768, false);
             app.setVSync(true);
             app.start();
         } catch (SlickException e) {

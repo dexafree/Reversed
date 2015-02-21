@@ -33,10 +33,12 @@ public class LevelLoader {
             ArrayList<Platform> platforms = getPlatforms(level);
             ArrayList<Mirror> mirrors = getMirrors(level);
             ArrayList<Platform> staticPlatforms = getStaticPlatforms(level);
+            ArrayList<Mirror> staticMirrors = getStaticMirrors(level);
+            ArrayList<GameObject> objects = getObjects(level);
             Exit exit = getExit(level);
             Point start = getStart(level);
             
-            Level l = new Level(title, structure, platforms, mirrors, staticPlatforms, start, exit);
+            Level l = new Level(title, structure, platforms, mirrors, staticPlatforms, staticMirrors, objects, start, exit);
             levelList.add(l);
         }
         return levelList;
@@ -66,8 +68,16 @@ public class LevelLoader {
     }
     
     private static ArrayList<Mirror> getMirrors(JsonObject level){
+        return getMirrorsGeneric(level, "mirrors");
+    }
+
+    private static ArrayList<Mirror> getStaticMirrors(JsonObject level){
+        return getMirrorsGeneric(level, "static_mirrors");
+    }
+    
+    private static ArrayList<Mirror> getMirrorsGeneric(JsonObject level, String type){
         ArrayList<Mirror> mirrorsList = new ArrayList<Mirror>();
-        JsonArray mirrorsArray = level.get("mirrors").getAsJsonArray();
+        JsonArray mirrorsArray = level.get(type).getAsJsonArray();
         for(int i=0;i<mirrorsArray.size();i++){
             
             JsonArray mirror = mirrorsArray.get(i).getAsJsonArray();
@@ -106,6 +116,22 @@ public class LevelLoader {
         }
 
         return platforms;
+    }
+    
+    private static ArrayList<GameObject> getObjects(JsonObject level){
+        ArrayList<GameObject> objects = new ArrayList<GameObject>();
+        JsonArray objectsArray = level.get("objects").getAsJsonArray();
+        for(int i = 0; i < objectsArray.size();i++){
+            JsonObject object = objectsArray.get(i).getAsJsonObject();
+            int x = object.get("x").getAsInt();
+            int y = object.get("y").getAsInt();
+            String type = object.get("type").getAsString();
+            String color = object.get("color").getAsString();
+            objects.add(new GameObject(x, y, type, color));
+        }
+        
+        return objects;
+        
     }
     
     private static Exit getExit(JsonObject level){

@@ -9,15 +9,22 @@ public class Level {
     private ArrayList<Platform> platforms;
     private ArrayList<Mirror> mirrors;
     private ArrayList<Platform> staticShapes;
+    private ArrayList<Mirror> staticMirrors;
+    private ArrayList<GameObject> objects;
     private Point start;
     private Exit exit;
 
-    public Level(String title, float[] levelStructure, ArrayList<Platform> platforms, ArrayList<Mirror> mirrors, ArrayList<Platform> staticShapes, Point start, Exit exit) {
+    public Level(String title, float[] levelStructure, ArrayList<Platform> platforms,
+                 ArrayList<Mirror> mirrors, ArrayList<Platform> staticShapes,
+                 ArrayList<Mirror> staticMirrors, ArrayList<GameObject> objects,
+                 Point start, Exit exit) {
         this.title = title;
         this.levelStructure = levelStructure;
         this.platforms = platforms;
         this.mirrors = mirrors;
         this.staticShapes = staticShapes;
+        this.staticMirrors = staticMirrors;
+        this.objects = objects;
         this.start = start;
         this.exit = exit;
     }
@@ -40,6 +47,15 @@ public class Level {
 
     public ArrayList<Platform> getStaticShapes() {
         return staticShapes;
+    }
+    
+    public ArrayList<Mirror> getStaticMirrors(){
+        return staticMirrors;
+        
+    }
+    
+    public ArrayList<GameObject> getObjects(){
+        return objects;
     }
 
     public Point getStart() {
