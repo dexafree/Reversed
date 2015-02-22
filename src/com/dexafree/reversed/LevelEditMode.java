@@ -16,7 +16,7 @@ public class LevelEditMode extends LevelView {
     private int elapsedTime;
     
     public LevelEditMode(Level level){
-        super(level);
+        super(level, null);
     }
     
     @Override

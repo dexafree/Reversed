@@ -2,16 +2,24 @@ package com.dexafree.reversed.model;
 
 import com.dexafree.reversed.components.*;
 
+import org.newdawn.slick.*;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 public class LevelView {
+    
+    public interface OnLevelFinished {
+        
+        void run() throws SlickException;
+        
+    }
+    
+    private final static int FINISH_WAIT_TIME = 2000;
 
     private Level level;
     private Polygon levelStructure;
@@ -21,13 +29,22 @@ public class LevelView {
     private ArrayList<MirrorView> staticMirrors;
     private ArrayList<ObjectView> objects;
     private ExitView exit;
+    private TrueTypeFont levelFont;
+    private OnLevelFinished callback;
+    private boolean isFinished;
+    private int finishedCount;
+    private static org.newdawn.slick.Font originalFont;
 
-    public LevelView(Level level){
+    public LevelView(Level level, OnLevelFinished callback){
         this.level = level;
+        this.callback = callback;
     }
 
 
     public void init(GameContainer gc) throws SlickException{
+        isFinished = false;
+        finishedCount = 0;
+        
         generateStructure();
         generatePlatforms();
         generateMirrors();
@@ -35,9 +52,15 @@ public class LevelView {
         generateStaticMirrors();
         generateObjects();
         generateExit();
+        levelFont = generateFont();
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException{
+        
+        if(originalFont == null){
+            originalFont = g.getFont();
+        }
+        
         renderLevel(g);
         renderPlatforms(g);
         renderMirrors(g);
@@ -46,10 +69,19 @@ public class LevelView {
         renderObjects(g);
 
         exit.render(g);
+        
+        renderEnd(g);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
+        
+        if(isFinished) {
+            finishedCount += delta;
 
+            if (finishedCount > FINISH_WAIT_TIME) {
+                callback.run();
+            }
+        }
 
     }
 
@@ -119,6 +151,12 @@ public class LevelView {
             objects.add(view);
         }
         
+    }
+    
+    private TrueTypeFont generateFont(){
+
+        Font font = new Font("Times New Roman", Font.BOLD, 30);
+        return new TrueTypeFont(font, false);
     }
 
 
@@ -250,6 +288,18 @@ public class LevelView {
         g.setBackground(Color.green);
         g.setColor(Color.black);
         g.fill(levelStructure);
+        
+        g.getFont();
+        
+        
+        // Level title
+        g.setColor(Color.white);
+
+        levelFont.drawString(12, 16, level.getTitle());
+        
+        //g.setFont(originalFont);
+        
+        
     }
 
     private void renderPlatforms(Graphics g){
@@ -285,8 +335,20 @@ public class LevelView {
         
     }
     
+    private void renderEnd(Graphics g){
+        if(isFinished){
+            originalFont.drawString(400, 300, level.getEndingSentence());
+        }
+        
+    }
+    
     public Level getLevel(){
         return level;
+    }
+    
+    public void finish(){
+        isFinished = true;
+        
     }
 
 }

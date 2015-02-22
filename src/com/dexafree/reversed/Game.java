@@ -16,11 +16,12 @@ public class Game extends BasicGame {
     public static int HEIGHT_SQUARES;
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
-    private final static int STARTING_LEVEL = 2;
+    private final static int STARTING_LEVEL = 0;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
-    private static boolean DRAW_LINES = true;
-    private static boolean SHOW_OPOSITE = true;
+    private static boolean DRAW_LINES = false;
+    private static boolean SHOW_OPOSITE = false;
+    public final static boolean FOR_COMPILATION = false;
     
     
     private Circle lastClick;
@@ -40,8 +41,9 @@ public class Game extends BasicGame {
 
     public Game() throws SlickException {
         super("ᗡƎƧЯƎVƎЯ");
-        levels = LevelLoader.loadLevels();
+        levels = new LevelLoader().loadLevels();
         currentLevel = 0;
+        
     }
 
 
@@ -65,10 +67,16 @@ public class Game extends BasicGame {
         currentLevelView.init(gc);
     }
     
-    private void setLevel(GameContainer gc, int levelNum) throws SlickException{
+    private void setLevel(final GameContainer gc, int levelNum) throws SlickException{
         this.currentLevel = levelNum;
         Level level = levels.get(levelNum);
-        currentLevelView = new LevelView(level);
+        currentLevelView = new LevelView(level, new LevelView.OnLevelFinished() {
+            @Override
+            public void run() throws SlickException{
+                isWin = false;
+                nextLevel(gc);
+            }
+        });
         currentLevelView.init(gc);
         player = new Player(currentLevelView);
         player.init();
@@ -117,13 +125,16 @@ public class Game extends BasicGame {
             
         } else {
             showWin(gc, g);
-            if(currentLevel < levels.size()-1) {
-                setLevel(gc, currentLevel + 1);
-                setPlayer(gc);
-            }
-            isWin = false;
         }
 
+    }
+    
+    private void nextLevel(GameContainer gc) throws SlickException{
+        if(currentLevel < levels.size()-1) {
+            setLevel(gc, currentLevel + 1);
+            setPlayer(gc);
+        }
+        
     }
 
 
@@ -154,6 +165,8 @@ public class Game extends BasicGame {
 
             if (!isWin) {
                 isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
+            } else {
+                currentLevelView.finish();
             }
 
             if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
@@ -177,7 +190,9 @@ public class Game extends BasicGame {
             SHOW_OPOSITE = !SHOW_OPOSITE;
             timeSinceLastFlip = 0;
         }
-
+        
+        
+        
     }
 
     // Draw a grid on the screen for easy positioning
