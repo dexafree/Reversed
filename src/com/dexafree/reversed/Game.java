@@ -1,5 +1,6 @@
 package com.dexafree.reversed;
 
+import com.dexafree.reversed.components.IntroScreen;
 import com.dexafree.reversed.model.Level;
 import com.dexafree.reversed.model.LevelView;
 import com.dexafree.reversed.model.Point;
@@ -30,30 +31,38 @@ public class Game extends BasicGame {
     private final ArrayList<Level> levels;
 
     private int currentLevel;
-    private LevelView currentLevelView; 
+    private LevelView currentLevelView;
     private Player player;
+    private IntroScreen introScreen;
     
     private int timeSinceLastFlip = 0;
     private boolean canFlip = true;
     
     private boolean isWin = false;
+    private boolean isIntroFinished = false;
     
 
     public Game() throws SlickException {
         super("ᗡƎƧЯƎVƎЯ");
         levels = new LevelLoader().loadLevels();
-        currentLevel = 0;
-        
     }
 
 
     public void init(GameContainer gc) throws SlickException {
+
+        currentLevel = 0;
         
         WIDTH_SQUARES = gc.getWidth() / LINES_SIZE;
         HEIGHT_SQUARES = gc.getHeight() / LINES_SIZE;
-
+        
         if(!EDIT_MODE) {
-
+            introScreen = new IntroScreen(new IntroScreen.IntroFinished() {
+                @Override
+                public void onIntroFinished() {
+                    isIntroFinished = true;
+                }
+            });
+            
             setLevel(gc, STARTING_LEVEL);
             setPlayer(gc);
         } else {
@@ -96,35 +105,40 @@ public class Game extends BasicGame {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
 
-        currentLevelView.render(gc, g);
-        if(!EDIT_MODE) {
-            player.render(gc, g);
-        }
-        
-        if(!isWin) {
+        if(isIntroFinished) {
 
-            drawDebugLines(gc, g, LINES_SIZE);
-            showMouseInfo(gc, g);
-            
-            if(DEBUG_MODE) {
-
-                if(shadow != null && SHOW_OPOSITE){
-                    g.setColor(Color.cyan);
-                    g.fill(shadow);
-                }
-
-                //showPosition(g);
-                if(!EDIT_MODE)
-                    showPlayerInfo(g);
-                
-                if(lastClick != null) {
-                    g.setColor(Color.red);
-                    g.fill(lastClick);
-                }
+            currentLevelView.render(gc, g);
+            if (!EDIT_MODE) {
+                player.render(gc, g);
             }
-            
+
+            if (!isWin) {
+
+                drawDebugLines(gc, g, LINES_SIZE);
+                showMouseInfo(gc, g);
+
+                if (DEBUG_MODE) {
+
+                    if (shadow != null && SHOW_OPOSITE) {
+                        g.setColor(Color.cyan);
+                        g.fill(shadow);
+                    }
+
+                    //showPosition(g);
+                    if (!EDIT_MODE)
+                        showPlayerInfo(g);
+
+                    if (lastClick != null) {
+                        g.setColor(Color.red);
+                        g.fill(lastClick);
+                    }
+                }
+
+            } else {
+                showWin(gc, g);
+            }
         } else {
-            showWin(gc, g);
+            introScreen.render(gc, g);
         }
 
     }
@@ -140,55 +154,59 @@ public class Game extends BasicGame {
 
     public void update(GameContainer gc, int delta) throws SlickException {
 
-        currentLevelView.update(gc, delta);
-        
-        if(!EDIT_MODE) {
-            player.update(gc, delta);
+        if(isIntroFinished) {
+            currentLevelView.update(gc, delta);
 
-            timeSinceLastFlip += delta;
+            if (!EDIT_MODE) {
+                player.update(gc, delta);
 
-            if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
-                canFlip = true;
+                timeSinceLastFlip += delta;
+
+                if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
+                    canFlip = true;
+                }
+
+                if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
+                    currentLevelView.invert(gc);
+                    player.invert(gc);
+                    canFlip = false;
+                    timeSinceLastFlip = 0;
+                }
+
+                if (gc.getInput().isKeyDown(Input.KEY_R)) {
+                    restartLevel(gc);
+                    setPlayer(gc);
+                }
+
+                if (!isWin) {
+                    isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
+                } else {
+                    currentLevelView.finish();
+                }
+
+                if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                    int x = gc.getInput().getMouseX();
+                    int y = gc.getInput().getMouseY();
+
+                    lastClick = new Circle(x, y, 10);
+                }
+
+                if (DEBUG_MODE) {
+                    makeOposite(gc);
+                }
+
             }
-
-            if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
-                currentLevelView.invert(gc);
-                player.invert(gc);
-                canFlip = false;
+            if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
+                DRAW_LINES = !DRAW_LINES;
                 timeSinceLastFlip = 0;
             }
 
-            if (gc.getInput().isKeyDown(Input.KEY_R)) {
-                restartLevel(gc);
-                setPlayer(gc);
+            if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
+                SHOW_OPOSITE = !SHOW_OPOSITE;
+                timeSinceLastFlip = 0;
             }
-
-            if (!isWin) {
-                isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
-            } else {
-                currentLevelView.finish();
-            }
-
-            if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-                int x = gc.getInput().getMouseX();
-                int y = gc.getInput().getMouseY();
-
-                lastClick = new Circle(x, y, 10);
-            }
-            
-            if(DEBUG_MODE){
-                makeOposite(gc);
-            }
-
-        }
-        if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
-            DRAW_LINES = !DRAW_LINES;
-            timeSinceLastFlip = 0;
-        }
-
-        if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
-            SHOW_OPOSITE = !SHOW_OPOSITE;
-            timeSinceLastFlip = 0;
+        } else {
+            introScreen.update(gc, delta);
         }
         
         
