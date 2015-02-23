@@ -309,7 +309,7 @@ public class LevelView {
     }
     
     private void renderEnd(Graphics g){
-        if(isFinished){
+        if(isFinished && areAllObjectsPicked()){
 
             g.setColor(new Color(0, 0, 0, 0.5f));
             g.fillRect(0, 0, 1000, 768);
