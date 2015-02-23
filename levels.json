@@ -163,7 +163,7 @@
     ],
     "mirrors" : [
       {
-        "color": "white",
+        "color": "yellow",
         "x": 18,
         "y": 3
         
@@ -187,7 +187,7 @@
 
       },
       {
-        "color": "yellow",
+        "color": "white",
         "x": 18,
         "y": 9
 

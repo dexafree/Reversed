@@ -14,13 +14,14 @@ public class IntroScreen {
     }
     
     private final static String[] WELCOME_STRINGS = new String[]{
-            "Welcome to ᗡƎƧЯƎVƎЯ",
+            "Welcome to REVERSED",
             "These are the only rules:",
             "1. You can only go to the right",
             "2. You can jump",
             "3. You can use mirrors by pressing SPACE",
             "4. Some mirrors require a key to be usable",
-            "To restart a level, press R"
+            "To restart a level, press R",
+            "I hope you enjoy the Game\nLudum Dare February 2015"
             
     };
     private final static int STRING_TIME = 2000;

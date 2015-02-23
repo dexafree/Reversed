@@ -1,5 +1,6 @@
 package com.dexafree.reversed.model;
 
+import com.dexafree.reversed.Main;
 import com.dexafree.reversed.components.*;
 
 import org.newdawn.slick.*;
@@ -68,6 +69,8 @@ public class LevelView {
         exit.render(g);
         
         renderEnd(g);
+        
+        renderInfo(g);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
@@ -270,14 +273,12 @@ public class LevelView {
         
         g.getFont();
         
-        
-        // Level title
+    }
+    
+    private void renderInfo(Graphics g){
         g.setColor(Color.white);
 
         levelFont.drawString(12, 16, level.getTitle());
-        
-        //g.setFont(originalFont);
-        
         
     }
 
@@ -312,7 +313,7 @@ public class LevelView {
         if(isFinished && areAllObjectsPicked()){
 
             g.setColor(new Color(0, 0, 0, 0.5f));
-            g.fillRect(0, 0, 1000, 768);
+            g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
             
             g.setColor(Color.white);
             originalFont.drawString(400, 300, level.getEndingSentence());
@@ -327,13 +328,19 @@ public class LevelView {
         
     }
     
+    public void drawDisappoint(Graphics g){
+        if(!isFinished) {
+            g.setColor(Color.white);
+            g.drawString("YOU DISAPPOINT ME", 450, 300);
+        }
+    }
+    
     public Level getLevel(){
         return level;
     }
     
     public void finish(){
         isFinished = true;
-        
     }
 
 }

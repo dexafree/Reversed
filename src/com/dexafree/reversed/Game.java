@@ -18,6 +18,7 @@ public class Game extends BasicGame {
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
     private final static int STARTING_LEVEL = 0;
+    private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
     private static boolean DRAW_LINES = false;
@@ -36,10 +37,11 @@ public class Game extends BasicGame {
     private IntroScreen introScreen;
     
     private int timeSinceLastFlip = 0;
+    private long timeSinceLevelStarted;
     private boolean canFlip = true;
     
     private boolean isWin = false;
-    private boolean isIntroFinished = false;
+    private boolean isIntroFinished = false || EDIT_MODE;
     
 
     public Game() throws SlickException {
@@ -51,6 +53,7 @@ public class Game extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
 
         currentLevel = 0;
+        timeSinceLevelStarted = 0;
         
         WIDTH_SQUARES = gc.getWidth() / LINES_SIZE;
         HEIGHT_SQUARES = gc.getHeight() / LINES_SIZE;
@@ -86,6 +89,7 @@ public class Game extends BasicGame {
                 nextLevel(gc);
             }
         });
+        timeSinceLevelStarted = 0;
         currentLevelView.init(gc);
         player = new Player(currentLevelView);
         player.init();
@@ -93,6 +97,7 @@ public class Game extends BasicGame {
     
     private void restartLevel(GameContainer gc) throws SlickException {
         currentLevelView.init(gc);
+        timeSinceLevelStarted = 0;
         
     }
     
@@ -133,6 +138,10 @@ public class Game extends BasicGame {
                         g.fill(lastClick);
                     }
                 }
+                
+                if(timeSinceLevelStarted > DISAPPOINT_TIME){
+                    currentLevelView.drawDisappoint(g);
+                }
 
             } else {
                 showWin(gc, g);
@@ -155,6 +164,7 @@ public class Game extends BasicGame {
     public void update(GameContainer gc, int delta) throws SlickException {
 
         if(isIntroFinished) {
+            timeSinceLevelStarted += delta;
             currentLevelView.update(gc, delta);
 
             if (!EDIT_MODE) {
