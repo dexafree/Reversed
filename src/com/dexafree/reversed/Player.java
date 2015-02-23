@@ -3,6 +3,7 @@ package com.dexafree.reversed;
 import com.dexafree.reversed.components.ObjectView;
 import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.LevelView;
+import com.dexafree.reversed.model.Mirror;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,7 +19,7 @@ public class Player {
 
     private final static float GRAVITY = 0.5f;
     private final static float JUMP_STRENGTH = -15;
-    private final static float SPEED = 10;
+    private final static float SPEED = 8;
 
     private final static int interations = 5;
     
@@ -118,6 +119,7 @@ public class Player {
         if(object != null){
             inventory.add(object.getObject());
             object.pick();
+            level.updateMirrors(object.getObject());
         }
         
     }

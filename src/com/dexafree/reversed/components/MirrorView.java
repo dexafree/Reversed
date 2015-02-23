@@ -1,30 +1,41 @@
 package com.dexafree.reversed.components;
 
+import com.dexafree.reversed.Utils;
+import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.Mirror;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+import java.util.ArrayList;
+
 public class MirrorView extends BaseView{
     
-    private boolean used;
+    private boolean canUse = false;
     private Mirror mirror;
+    private Color color = Color.white;
     
     public MirrorView(Mirror mirror){
         this.mirror = mirror;
+        color = Utils.getColor(mirror.getColor());
         mShape = getPlatform(mirror.getX(), mirror.getY(), 1, 2);
     }
     
-    public boolean isUsed(){
-        return false;
-    }
-    
-    public void use() {
-        used = true;
+    public boolean canUse(){
+        return canUse || color.equals(color.white);
     }
     
     
     public void render(Graphics g){
-        g.setColor(Color.white);
+        g.setColor(color);
         g.fill(mShape);
+    }
+    
+    
+    public void unlock(GameObject object){
+        if(!canUse && object.getColor().equalsIgnoreCase(mirror.getColor())){
+            canUse = true;
+            color = Color.white;
+        }
+        
     }
 }

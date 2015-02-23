@@ -26,7 +26,6 @@ public class LevelView {
     private ArrayList<PlatformView> platforms;
     private ArrayList<MirrorView> mirrors;
     private ArrayList<Shape> staticShapes;
-    private ArrayList<MirrorView> staticMirrors;
     private ArrayList<ObjectView> objects;
     private ExitView exit;
     private TrueTypeFont levelFont;
@@ -49,7 +48,6 @@ public class LevelView {
         generatePlatforms();
         generateMirrors();
         generateStaticShapes();
-        generateStaticMirrors();
         generateObjects();
         generateExit();
         levelFont = generateFont();
@@ -65,7 +63,6 @@ public class LevelView {
         renderPlatforms(g);
         renderMirrors(g);
         renderStaticShapes(g);
-        renderStaticMirrors(g);
         renderObjects(g);
 
         exit.render(g);
@@ -126,16 +123,6 @@ public class LevelView {
         }
     }
 
-    private void generateStaticMirrors(){
-
-        staticMirrors = new ArrayList<MirrorView>();
-
-        ArrayList<Mirror> mirrorsModel = level.getStaticMirrors();
-        for(Mirror m : mirrorsModel){
-            staticMirrors.add(new MirrorView(m));
-        }
-    }
-
     private void generateExit(){
         exit = new ExitView(level.getExit());
     }
@@ -187,15 +174,7 @@ public class LevelView {
 
     public boolean isOnMirror(Shape s){
         for(MirrorView m : mirrors){
-            if(m.collidesOrContains(s) && !m.isUsed()) {
-                m.use();
-                return true;
-            }
-        }
-        
-        for(MirrorView m : staticMirrors){
-            if(m.collidesOrContains(s) && !m.isUsed()) {
-                m.use();
+            if(m.collidesOrContains(s) && m.canUse()) {
                 return true;
             }
         }
@@ -321,12 +300,6 @@ public class LevelView {
         }
     }
 
-    private void renderStaticMirrors(Graphics g){
-        g.setColor(Color.lightGray);
-        for(MirrorView s : staticMirrors){
-            g.fill(s.getShape());
-        }
-    }
     
     private void renderObjects(Graphics g){
         for(ObjectView v : objects){
@@ -337,7 +310,19 @@ public class LevelView {
     
     private void renderEnd(Graphics g){
         if(isFinished){
+
+            g.setColor(new Color(0, 0, 0, 0.5f));
+            g.fillRect(0, 0, 1000, 768);
+            
+            g.setColor(Color.white);
             originalFont.drawString(400, 300, level.getEndingSentence());
+        }
+        
+    }
+    
+    public void updateMirrors(GameObject object){
+        for(MirrorView m : mirrors){
+            m.unlock(object);
         }
         
     }

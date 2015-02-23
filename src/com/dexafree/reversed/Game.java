@@ -21,7 +21,7 @@ public class Game extends BasicGame {
     private final static boolean EDIT_MODE = false;
     private static boolean DRAW_LINES = false;
     private static boolean SHOW_OPOSITE = false;
-    public final static boolean FOR_COMPILATION = false;
+    public final static boolean FOR_COMPILATION = true;
     
     
     private Circle lastClick;

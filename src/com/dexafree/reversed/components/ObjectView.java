@@ -1,6 +1,7 @@
 package com.dexafree.reversed.components;
 
 import com.dexafree.reversed.Game;
+import com.dexafree.reversed.Utils;
 import com.dexafree.reversed.model.GameObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -17,7 +18,7 @@ public class ObjectView {
     
     public ObjectView(GameObject object){
         this.object = object;
-        color = getColor();
+        color = Utils.getColor(object.getColor());
         shape = getShape();
     }
     
@@ -28,51 +29,7 @@ public class ObjectView {
         }
     }
     
-    private Color getColor(){
-        String objectColor = object.getColor();
 
-        if(objectColor.equalsIgnoreCase("black")){
-            return Color.black;
-        }
-        else if(objectColor.equalsIgnoreCase("blue")){
-            return Color.blue;
-        }
-        else if(objectColor.equalsIgnoreCase("cyan")){
-            return Color.cyan;
-        }
-        else if(objectColor.equalsIgnoreCase("darkGray")){
-            return Color.darkGray;
-        }
-        else if(objectColor.equalsIgnoreCase("gray")){
-            return Color.gray;
-        }
-        else if(objectColor.equalsIgnoreCase("green")){
-            return Color.green;
-        }
-        else if(objectColor.equalsIgnoreCase("lightGray")){
-            return Color.lightGray;
-        }
-        else if(objectColor.equalsIgnoreCase("magenta")){
-            return Color.magenta;
-        }
-        else if(objectColor.equalsIgnoreCase("orange")){
-            return Color.orange;
-        }
-        else if(objectColor.equalsIgnoreCase("pink")){
-            return Color.pink;
-        }
-        else if(objectColor.equalsIgnoreCase("red")){
-            return Color.red;
-        }
-        else if(objectColor.equalsIgnoreCase("white")){
-            return Color.white;
-        }
-        else if(objectColor.equalsIgnoreCase("yellow")){
-            return Color.yellow;
-        }else {
-            return Color.green;
-        }
-    }
     
     private Shape getShape(){
         String objectShape = object.getType();
@@ -96,7 +53,6 @@ public class ObjectView {
     
     public boolean isPicked(){
         return picked;
-        
     }
     
     public void pick(){
@@ -104,7 +60,7 @@ public class ObjectView {
     }
     
     public void init(){
-        color = getColor();
+        color = Utils.getColor(object.getColor());
         shape = getShape();
         picked = false;
     }

@@ -36,12 +36,11 @@ public class LevelLoader {
             ArrayList<Platform> platforms = getPlatforms(level);
             ArrayList<Mirror> mirrors = getMirrors(level);
             ArrayList<Platform> staticPlatforms = getStaticPlatforms(level);
-            ArrayList<Mirror> staticMirrors = getStaticMirrors(level);
             ArrayList<GameObject> objects = getObjects(level);
             Exit exit = getExit(level);
             Point start = getStart(level);
             
-            Level l = new Level(title, endingSentence, structure, platforms, mirrors, staticPlatforms, staticMirrors, objects, start, exit);
+            Level l = new Level(title, endingSentence, structure, platforms, mirrors, staticPlatforms, objects, start, exit);
             levelList.add(l);
         }
         return levelList;
@@ -99,30 +98,23 @@ public class LevelLoader {
     }
     
     private ArrayList<Mirror> getMirrors(JsonObject level){
-        return getMirrorsGeneric(level, "mirrors");
-    }
-
-    private ArrayList<Mirror> getStaticMirrors(JsonObject level){
-        return getMirrorsGeneric(level, "static_mirrors");
-    }
-    
-    private ArrayList<Mirror> getMirrorsGeneric(JsonObject level, String type){
         ArrayList<Mirror> mirrorsList = new ArrayList<Mirror>();
-        JsonArray mirrorsArray = level.get(type).getAsJsonArray();
+        JsonArray mirrorsArray = level.get("mirrors").getAsJsonArray();
         for(int i=0;i<mirrorsArray.size();i++){
-            
-            JsonArray mirror = mirrorsArray.get(i).getAsJsonArray();
-            
-            int[] points = new int[]{
-                mirror.get(0).getAsInt(),
-                mirror.get(1).getAsInt()
-            };
-            
-            mirrorsList.add(new Mirror(points[0], points[1]));
+
+            JsonObject mirror = mirrorsArray.get(i).getAsJsonObject();
+
+            String color = mirror.get("color").getAsString();
+            int x = mirror.get("x").getAsInt();
+            int y = mirror.get("y").getAsInt();
+
+
+            mirrorsList.add(new Mirror(x, y, color));
         }
-        
+
         return mirrorsList;
     }
+
     
     private ArrayList<Platform> getPlatforms(JsonObject level){
         return getPlatformsGeneric(level, "platforms");
