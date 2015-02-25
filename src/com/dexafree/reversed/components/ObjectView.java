@@ -1,10 +1,12 @@
 package com.dexafree.reversed.components;
 
+import com.dexafree.reversed.AssetManager;
 import com.dexafree.reversed.Game;
 import com.dexafree.reversed.Utils;
 import com.dexafree.reversed.model.GameObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
@@ -15,17 +17,21 @@ public class ObjectView {
     private Color color;
     private Shape shape;
     private boolean picked = false;
+    private Image mImage;
     
-    public ObjectView(GameObject object){
+    public ObjectView(GameObject object, AssetManager manager){
         this.object = object;
         color = Utils.getColor(object.getColor());
         shape = getShape();
+        mImage = manager.getKeyImage();
+
     }
     
     public void render(Graphics g){
         if(!picked) {
-            g.setColor(color);
-            g.fill(shape);
+            /*g.setColor(color);
+            g.fill(shape);*/
+            mImage.draw(shape.getX(), shape.getY(), color);
         }
     }
     
@@ -77,5 +83,5 @@ public class ObjectView {
     public boolean collides(Shape s){
         return shape.intersects(s) || s.contains(shape);
     }
-    
+
 }

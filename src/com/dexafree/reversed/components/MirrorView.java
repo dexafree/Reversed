@@ -1,5 +1,6 @@
 package com.dexafree.reversed.components;
 
+import com.dexafree.reversed.AssetManager;
 import com.dexafree.reversed.Utils;
 import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.Mirror;

@@ -1,5 +1,6 @@
 package com.dexafree.reversed.components;
 
+import com.dexafree.reversed.AssetManager;
 import com.dexafree.reversed.model.Platform;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

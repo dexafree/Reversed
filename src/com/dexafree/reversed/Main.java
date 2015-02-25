@@ -18,6 +18,7 @@ public class Main {
             app.setDisplayMode(WIDTH, HEIGHT, false);
             app.setShowFPS(true);
             app.setVSync(true);
+            //app.setTargetFrameRate(60);
             app.start();
 
         } catch (SlickException e) {

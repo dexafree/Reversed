@@ -17,7 +17,7 @@ public class Game extends BasicGame {
     public static int HEIGHT_SQUARES;
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
-    private final static int STARTING_LEVEL = 0;
+    private final static int STARTING_LEVEL = 2;
     private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
@@ -35,6 +35,7 @@ public class Game extends BasicGame {
     private LevelView currentLevelView;
     private Player player;
     private IntroScreen introScreen;
+    private AssetManager assetManager;
     
     private int timeSinceLastFlip = 0;
     private long timeSinceLevelStarted;
@@ -57,6 +58,8 @@ public class Game extends BasicGame {
         
         WIDTH_SQUARES = gc.getWidth() / LINES_SIZE;
         HEIGHT_SQUARES = gc.getHeight() / LINES_SIZE;
+        
+        assetManager = new AssetManager();
         
         if(!EDIT_MODE) {
             introScreen = new IntroScreen(new IntroScreen.IntroFinished() {
@@ -82,7 +85,7 @@ public class Game extends BasicGame {
     private void setLevel(final GameContainer gc, int levelNum) throws SlickException{
         this.currentLevel = levelNum;
         Level level = levels.get(levelNum);
-        currentLevelView = new LevelView(level, new LevelView.OnLevelFinished() {
+        currentLevelView = new LevelView(level, assetManager, new LevelView.OnLevelFinished() {
             @Override
             public void run() throws SlickException{
                 isWin = false;

@@ -1,5 +1,6 @@
 package com.dexafree.reversed.model;
 
+import com.dexafree.reversed.AssetManager;
 import com.dexafree.reversed.Main;
 import com.dexafree.reversed.components.*;
 
@@ -34,10 +35,12 @@ public class LevelView {
     private boolean isFinished;
     private int finishedCount;
     private static org.newdawn.slick.Font originalFont;
+    private AssetManager manager;
 
-    public LevelView(Level level, OnLevelFinished callback){
+    public LevelView(Level level, AssetManager manager, OnLevelFinished callback){
         this.level = level;
         this.callback = callback;
+        this.manager = manager;
     }
 
 
@@ -127,7 +130,7 @@ public class LevelView {
     }
 
     private void generateExit(){
-        exit = new ExitView(level.getExit());
+        exit = new ExitView(level.getExit(), manager);
     }
     
     private void generateObjects(){
@@ -135,7 +138,7 @@ public class LevelView {
         objects = new ArrayList<ObjectView>();
         for(GameObject object : level.getObjects()){
             
-            ObjectView view = new ObjectView(object);
+            ObjectView view = new ObjectView(object, manager);
             view.init();
             
             objects.add(view);

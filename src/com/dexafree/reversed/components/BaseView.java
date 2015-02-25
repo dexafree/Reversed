@@ -1,5 +1,6 @@
 package com.dexafree.reversed.components;
 
+import com.dexafree.reversed.AssetManager;
 import com.dexafree.reversed.Game;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
