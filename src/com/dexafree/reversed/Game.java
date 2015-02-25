@@ -21,7 +21,7 @@ public class Game extends BasicGame {
     private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
-    private static boolean DRAW_LINES = false;
+    private static boolean DRAW_LINES = false || EDIT_MODE;
     private static boolean SHOW_OPOSITE = false;
     public final static boolean FOR_COMPILATION = false;
     
@@ -41,7 +41,7 @@ public class Game extends BasicGame {
     private boolean canFlip = true;
     
     private boolean isWin = false;
-    private boolean isIntroFinished = false || EDIT_MODE;
+    private boolean isIntroFinished = false || DEBUG_MODE;
     
 
     public Game() throws SlickException {
