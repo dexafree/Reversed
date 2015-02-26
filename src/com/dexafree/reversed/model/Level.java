@@ -6,6 +6,7 @@ public class Level {
 
     private String title;
     private String endingSentence;
+    private String plotSentence;
     private float[] levelStructure;
     private ArrayList<Platform> platforms;
     private ArrayList<Mirror> mirrors;
@@ -15,11 +16,12 @@ public class Level {
     private Exit exit;
     private int numLevel;
 
-    public Level(String title, String endingSentence, float[] levelStructure, ArrayList<Platform> platforms,
+    public Level(String title, String endingSentence, String plotSentence, float[] levelStructure, ArrayList<Platform> platforms,
                  ArrayList<Mirror> mirrors, ArrayList<Platform> staticShapes,
                  ArrayList<GameObject> objects, Point start, Exit exit, int numLevel) {
         this.title = title;
         this.endingSentence = endingSentence;
+        this.plotSentence = plotSentence;
         this.levelStructure = levelStructure;
         this.platforms = platforms;
         this.mirrors = mirrors;
@@ -36,6 +38,10 @@ public class Level {
 
     public String getEndingSentence() {
         return endingSentence;
+    }
+
+    public String getPlotSentence() {
+        return plotSentence;
     }
 
     public float[] getLevelStructure() {

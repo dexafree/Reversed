@@ -1,7 +1,8 @@
 [
   {
     "title": "Introduction",
-    "end_sentence" : "That was easy, right?",
+    "end_sentence" : "That was easy!",
+    "plot_sentence": "\"First of all, let's try to get out of here\", you think",
     "structure": [
       0, 0,
       50, 0,
@@ -52,6 +53,7 @@
   {
     "title": "Level 1",
     "end_sentence" : "Well done!",
+    "plot_sentence": "You realize that the golden blocks have not been affected for the curse.\nThey don't flip. They are condemned to remain that way.",
     "structure": [
       0, 0,
       50, 0,
@@ -134,6 +136,7 @@
   },
   {
     "title": "Level 2",
+    "plot_sentence": "Now you see a key, and a tinted mirror. Could they be related in any magical way?",
     "end_sentence" : "Good job",
     "structure" : [
       50,0,
@@ -229,6 +232,7 @@
   },
   {
     "title": "Level 3",
+    "plot_sentence": "ASDA",
     "end_sentence": "Wow, not bad",
     "structure": [
       50,
@@ -355,6 +359,7 @@
   },
   {
     "title": "Faith",
+    "plot_sentence": "ASDA",
     "end_sentence": "Will you have what it is needed?",
     "structure": [
       50,0,
@@ -452,6 +457,7 @@
   },
   {
     "title": "Crazyness",
+    "plot_sentence": "ASDA",
     "end_sentence": "Lucky!",
     "structure": [
       50,0,

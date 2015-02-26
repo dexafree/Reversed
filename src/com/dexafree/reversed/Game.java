@@ -1,6 +1,7 @@
 package com.dexafree.reversed;
 
 import com.dexafree.reversed.components.IntroScreen;
+import com.dexafree.reversed.components.PlotScreen;
 import com.dexafree.reversed.model.Level;
 import com.dexafree.reversed.model.LevelView;
 import com.dexafree.reversed.model.Point;
@@ -19,7 +20,7 @@ public class Game extends BasicGame {
     private final static float FLIP_TIME = SECONDS_TILL_FLIP * 1000;
     private final static int STARTING_LEVEL = 0;
     private final static long DISAPPOINT_TIME = 20000;
-    private final static boolean DEBUG_MODE = true;
+    private final static boolean DEBUG_MODE = false;
     private final static boolean EDIT_MODE = false;
     private static boolean DRAW_LINES = false || EDIT_MODE;
     private static boolean SHOW_OPOSITE = false;
@@ -32,12 +33,15 @@ public class Game extends BasicGame {
     private Rectangle shadow;
     
     private final ArrayList<Level> levels;
-
     private int currentLevel;
+    
     private LevelView currentLevelView;
     private Player player;
     private IntroScreen introScreen;
+    private PlotScreen plotScreen;
     private AssetManager assetManager;
+    
+    private PlotScreen.IPlotScreen introFinished;
     
     private int timeSinceLastFlip = 0;
     private long timeSinceLevelStarted;
@@ -45,6 +49,7 @@ public class Game extends BasicGame {
     
     private boolean isWin = false;
     private boolean isIntroFinished = false || DEBUG_MODE;
+    private boolean isPlotFinished = false || DEBUG_MODE;
     
 
     public Game() throws SlickException {
@@ -65,12 +70,20 @@ public class Game extends BasicGame {
         assetManager = new AssetManager();
         
         if(!EDIT_MODE) {
-            introScreen = new IntroScreen(new IntroScreen.IntroFinished() {
+            introScreen = new IntroScreen(assetManager, new IntroScreen.IIntroScreen() {
                 @Override
                 public void onIntroFinished() {
                     isIntroFinished = true;
                 }
             });
+            introScreen.init();
+            introFinished = new PlotScreen.IPlotScreen() {
+                @Override
+                public void onPlotFinished() {
+                    isPlotFinished = true;
+                }
+            };
+            plotScreen = new PlotScreen(levels.get(currentLevel).getPlotSentence(), introFinished);
             
             setLevel(gc, STARTING_LEVEL);
             setPlayer(gc);
@@ -92,6 +105,7 @@ public class Game extends BasicGame {
             @Override
             public void run() throws SlickException{
                 isWin = false;
+                isIntroFinished = false;
                 nextLevel(gc);
             }
         });
@@ -117,40 +131,45 @@ public class Game extends BasicGame {
     public void render(GameContainer gc, Graphics g) throws SlickException {
 
         if(isIntroFinished) {
+            
+            if(isPlotFinished) {
 
-            currentLevelView.render(gc, g);
-            if (!EDIT_MODE) {
-                player.render(gc, g);
-            }
-
-            if (!isWin) {
-
-                drawDebugLines(gc, g, LINES_SIZE);
-                showMouseInfo(gc, g);
-
-                if (DEBUG_MODE) {
-
-                    if (shadow != null && SHOW_OPOSITE) {
-                        g.setColor(Color.cyan);
-                        g.fill(shadow);
-                    }
-
-                    //showPosition(g);
-                    if (!EDIT_MODE)
-                        showPlayerInfo(g);
-
-                    if (lastClick != null) {
-                        g.setColor(Color.red);
-                        g.fill(lastClick);
-                    }
-                }
-                
-                if(timeSinceLevelStarted > DISAPPOINT_TIME){
-                    currentLevelView.drawDisappoint(g);
+                currentLevelView.render(gc, g);
+                if (!EDIT_MODE) {
+                    player.render(gc, g);
                 }
 
+                if (!isWin) {
+
+                    drawDebugLines(gc, g, LINES_SIZE);
+                    showMouseInfo(gc, g);
+
+                    if (DEBUG_MODE) {
+
+                        if (shadow != null && SHOW_OPOSITE) {
+                            g.setColor(Color.cyan);
+                            g.fill(shadow);
+                        }
+
+                        //showPosition(g);
+                        if (!EDIT_MODE)
+                            showPlayerInfo(g);
+
+                        if (lastClick != null) {
+                            g.setColor(Color.red);
+                            g.fill(lastClick);
+                        }
+                    }
+
+                    if (timeSinceLevelStarted > DISAPPOINT_TIME) {
+                        currentLevelView.drawDisappoint(g);
+                    }
+
+                } else {
+                    showWin(gc, g);
+                }
             } else {
-                showWin(gc, g);
+                plotScreen.render(gc, g);
             }
         } else {
             introScreen.render(gc, g);
@@ -160,6 +179,8 @@ public class Game extends BasicGame {
     
     private void nextLevel(GameContainer gc) throws SlickException{
         if(currentLevel < levels.size()-1) {
+            isPlotFinished = false;
+            plotScreen = new PlotScreen(levels.get(currentLevel+1).getPlotSentence(), introFinished);
             setLevel(gc, currentLevel + 1);
             setPlayer(gc);
         }
@@ -170,56 +191,62 @@ public class Game extends BasicGame {
     public void update(GameContainer gc, int delta) throws SlickException {
 
         if(isIntroFinished) {
-            timeSinceLevelStarted += delta;
-            currentLevelView.update(gc, delta);
+            
+            if(isPlotFinished) {
 
-            if (!EDIT_MODE) {
-                player.update(gc, delta);
+                timeSinceLevelStarted += delta;
+                currentLevelView.update(gc, delta);
 
-                timeSinceLastFlip += delta;
+                if (!EDIT_MODE) {
+                    player.update(gc, delta);
 
-                if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
-                    canFlip = true;
+                    timeSinceLastFlip += delta;
+
+                    if (timeSinceLastFlip > FLIP_TIME && !canFlip) {
+                        canFlip = true;
+                    }
+
+                    if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
+                        currentLevelView.invert(gc);
+                        player.invert(gc);
+                        canFlip = false;
+                        timeSinceLastFlip = 0;
+                    }
+
+                    if (gc.getInput().isKeyDown(Input.KEY_R)) {
+                        restartLevel(gc);
+                        setPlayer(gc);
+                    }
+
+                    if (!isWin) {
+                        isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
+                    } else {
+                        currentLevelView.finish();
+                    }
+
+                    if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+                        int x = gc.getInput().getMouseX();
+                        int y = gc.getInput().getMouseY();
+
+                        lastClick = new Circle(x, y, 10);
+                    }
+
+                    if (DEBUG_MODE) {
+                        makeOposite(gc);
+                    }
+
                 }
-
-                if (gc.getInput().isKeyDown(Input.KEY_SPACE) && canFlip && player.isOnMirror()) {
-                    currentLevelView.invert(gc);
-                    player.invert(gc);
-                    canFlip = false;
+                if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
+                    DRAW_LINES = !DRAW_LINES;
                     timeSinceLastFlip = 0;
                 }
 
-                if (gc.getInput().isKeyDown(Input.KEY_R)) {
-                    restartLevel(gc);
-                    setPlayer(gc);
+                if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
+                    SHOW_OPOSITE = !SHOW_OPOSITE;
+                    timeSinceLastFlip = 0;
                 }
-
-                if (!isWin) {
-                    isWin = player.isOnExit() && gc.getInput().isKeyDown(Input.KEY_SPACE);
-                } else {
-                    currentLevelView.finish();
-                }
-
-                if (gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
-                    int x = gc.getInput().getMouseX();
-                    int y = gc.getInput().getMouseY();
-
-                    lastClick = new Circle(x, y, 10);
-                }
-
-                if (DEBUG_MODE) {
-                    makeOposite(gc);
-                }
-
-            }
-            if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
-                DRAW_LINES = !DRAW_LINES;
-                timeSinceLastFlip = 0;
-            }
-
-            if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
-                SHOW_OPOSITE = !SHOW_OPOSITE;
-                timeSinceLastFlip = 0;
+            } else {
+                plotScreen.update(gc, delta);
             }
         } else {
             introScreen.update(gc, delta);

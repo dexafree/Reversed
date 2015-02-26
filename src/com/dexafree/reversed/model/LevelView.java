@@ -274,7 +274,7 @@ public class LevelView {
     }
 
     private void renderLevel(Graphics g){
-        g.setBackground(Color.green);
+        //g.setBackground(Color.green);
         
         g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT, backgroundImage, 0, 0);
         

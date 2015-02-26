@@ -32,6 +32,7 @@ public class LevelLoader {
             
             String title = getTitle(level);
             String endingSentence = getEndingSentence(level);
+            String plotSentence = getPlotSentence(level);
             float[] structure = getStructure(level);
             ArrayList<Platform> platforms = getPlatforms(level);
             ArrayList<Mirror> mirrors = getMirrors(level);
@@ -40,7 +41,7 @@ public class LevelLoader {
             Exit exit = getExit(level);
             Point start = getStart(level);
             
-            Level l = new Level(title, endingSentence, structure, platforms, mirrors, staticPlatforms, objects, start, exit, i);
+            Level l = new Level(title, endingSentence, plotSentence, structure, platforms, mirrors, staticPlatforms, objects, start, exit, i);
             levelList.add(l);
         }
         return levelList;
@@ -85,6 +86,11 @@ public class LevelLoader {
     
     private String getEndingSentence(JsonObject level){
         return getStringGeneric(level, "end_sentence");
+        
+    }
+    
+    private String getPlotSentence(JsonObject level){
+        return getStringGeneric(level, "plot_sentence");
         
     }
     

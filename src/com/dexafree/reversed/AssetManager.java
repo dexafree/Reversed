@@ -12,6 +12,7 @@ public class AssetManager {
     private Image playerImage;
     private Image tileImage;
     private Image staticTileImage;
+    private Image logoImage;
     
     public AssetManager() throws SlickException{
         exitImage = new Image("assets/exit.png");
@@ -21,6 +22,7 @@ public class AssetManager {
         playerImage = new Image("assets/player.png");
         tileImage = new Image("assets/tile.png");
         staticTileImage = new Image("assets/static_tile.png");
+        logoImage = new Image("assets/logo.png");
     }
     
     public Image getExitImage(){
@@ -49,5 +51,9 @@ public class AssetManager {
 
     public Image getStaticTileImage() {
         return staticTileImage;
+    }
+
+    public Image getLogoImage() {
+        return logoImage;
     }
 }
