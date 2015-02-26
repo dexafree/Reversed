@@ -35,12 +35,16 @@ public class LevelView {
     private boolean isFinished;
     private int finishedCount;
     private static org.newdawn.slick.Font originalFont;
+    private Image backgroundImage;
+    private Image staticTileImage;
     private AssetManager manager;
 
     public LevelView(Level level, AssetManager manager, OnLevelFinished callback){
         this.level = level;
         this.callback = callback;
         this.manager = manager;
+        backgroundImage = manager.getTileImage();
+        staticTileImage = manager.getStaticTileImage();
     }
 
 
@@ -101,7 +105,7 @@ public class LevelView {
         ArrayList<Platform> platformsModel = level.getPlatforms();
         for(Platform p : platformsModel){
 
-            platforms.add(new PlatformView(p));
+            platforms.add(new PlatformView(p, manager));
         }
     }
 
@@ -271,6 +275,9 @@ public class LevelView {
 
     private void renderLevel(Graphics g){
         g.setBackground(Color.green);
+        
+        g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT, backgroundImage, 0, 0);
+        
         g.setColor(Color.black);
         g.fill(levelStructure);
         
@@ -298,9 +305,9 @@ public class LevelView {
     }
 
     private void renderStaticShapes(Graphics g){
-        g.setColor(Color.orange);
+        /*g.setColor(Color.orange);*/
         for(Shape s : staticShapes){
-            g.fill(s);
+            g.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight(), staticTileImage, 0, 0);
         }
     }
 

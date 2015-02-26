@@ -17,7 +17,7 @@ public class Game extends BasicGame {
     public static int HEIGHT_SQUARES;
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
-    private final static int STARTING_LEVEL = 4;
+    private final static int STARTING_LEVEL = 0;
     private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
@@ -97,7 +97,7 @@ public class Game extends BasicGame {
         });
         timeSinceLevelStarted = 0;
         currentLevelView.init(gc);
-        player = new Player(currentLevelView);
+        player = new Player(currentLevelView, assetManager);
         player.init();
     }
     
@@ -108,7 +108,7 @@ public class Game extends BasicGame {
     }
     
     private void setPlayer(GameContainer gc) throws SlickException{
-        player = new Player(currentLevelView);
+        player = new Player(currentLevelView, assetManager);
         player.init();
     }
 

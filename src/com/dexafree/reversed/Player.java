@@ -4,11 +4,7 @@ import com.dexafree.reversed.components.ObjectView;
 import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.LevelView;
 import com.dexafree.reversed.model.Mirror;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -30,12 +26,16 @@ public class Player {
     private Shape player;
     private LevelView level;
     private ArrayList<GameObject> inventory;
+    
+    private Image playerImage;
 
 
     private float vX = 0;
     private float vY = 0;
 
-    public Player(LevelView level) {
+    public Player(LevelView level, AssetManager manager) {
+        
+        this.playerImage = manager.getPlayerImage();
         this.level = level;
     }
 
@@ -44,13 +44,25 @@ public class Player {
         int startingY = level.getLevel().getStart().y;
         
         inventory = new ArrayList<GameObject>();
-        player = new Rectangle(startingX, startingY ,40,40);
+        //player = new Rectangle(startingX, startingY ,40,40);
+        
+        player = new Rectangle(startingX, startingY ,playerImage.getWidth(), playerImage.getHeight()-1);
+        
+        float[] points = player.getPoints();
+        
+        points[0] = (points[0] + 10);
+        points[2] = (points[2] - 8);
+        points[4] = (points[4] - 8);
+        points[6] = (points[6] + 10);
+
+        player = new Polygon(points);
     }
 
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        g.setColor( Color.red );
-        g.fill(player);
+        /*g.setColor(Color.red );
+        g.fill(player);*/
+        playerImage.draw(player.getX()-8, player.getY());
     }
 
 
