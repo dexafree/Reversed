@@ -15,8 +15,8 @@ public class Game extends BasicGame {
     public final static int LINES_SIZE = 50;
     public static int WIDTH_SQUARES;
     public static int HEIGHT_SQUARES;
-    private final static int SECONDS_TILL_FLIP = 1;
-    private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
+    private final static float SECONDS_TILL_FLIP = 0.5f;
+    private final static float FLIP_TIME = SECONDS_TILL_FLIP * 1000;
     private final static int STARTING_LEVEL = 0;
     private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
