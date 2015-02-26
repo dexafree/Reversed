@@ -68,7 +68,7 @@ public class Game extends BasicGame {
         HEIGHT_SQUARES = gc.getHeight() / LINES_SIZE;
         
         assetManager = new AssetManager();
-        
+
         if(!EDIT_MODE) {
             introScreen = new IntroScreen(assetManager, new IntroScreen.IIntroScreen() {
                 @Override
@@ -105,7 +105,7 @@ public class Game extends BasicGame {
             @Override
             public void run() throws SlickException{
                 isWin = false;
-                isIntroFinished = false;
+                isPlotFinished = false;
                 nextLevel(gc);
             }
         });
