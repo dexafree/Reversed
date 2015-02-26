@@ -6,6 +6,7 @@ import com.dexafree.reversed.model.GameObject;
 import com.dexafree.reversed.model.Mirror;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 import java.util.ArrayList;
 
@@ -14,11 +15,13 @@ public class MirrorView extends BaseView{
     private boolean canUse = false;
     private Mirror mirror;
     private Color color = Color.white;
+    private Image mImage;
     
-    public MirrorView(Mirror mirror){
+    public MirrorView(Mirror mirror, AssetManager manager){
         this.mirror = mirror;
         color = Utils.getColor(mirror.getColor());
         mShape = getPlatform(mirror.getX(), mirror.getY(), 1, 2);
+        mImage = manager.getMirrorImage();
     }
     
     public boolean canUse(){
@@ -27,8 +30,9 @@ public class MirrorView extends BaseView{
     
     
     public void render(Graphics g){
-        g.setColor(color);
-        g.fill(mShape);
+        /*g.setColor(color);
+        g.fill(mShape);*/
+        mImage.draw(mShape.getX(), mShape.getY(), color);
     }
     
     

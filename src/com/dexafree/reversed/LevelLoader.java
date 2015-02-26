@@ -40,7 +40,7 @@ public class LevelLoader {
             Exit exit = getExit(level);
             Point start = getStart(level);
             
-            Level l = new Level(title, endingSentence, structure, platforms, mirrors, staticPlatforms, objects, start, exit);
+            Level l = new Level(title, endingSentence, structure, platforms, mirrors, staticPlatforms, objects, start, exit, i);
             levelList.add(l);
         }
         return levelList;

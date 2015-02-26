@@ -15,6 +15,7 @@ public class ExitView extends BaseView {
     public ExitView(Exit exit, AssetManager manager){
         this.exit = exit;
         mShape = getPlatform(exit.getX(), exit.getY(), 1, 2);
+        //exitImage = numLevel == Game.NUM_LEVELS-1 ? manager.getGameExitImage() : manager.getExitImage();
         exitImage = manager.getExitImage();
     }
     

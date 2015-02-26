@@ -17,13 +17,15 @@ public class Game extends BasicGame {
     public static int HEIGHT_SQUARES;
     private final static int SECONDS_TILL_FLIP = 1;
     private final static int FLIP_TIME = SECONDS_TILL_FLIP * 1000;
-    private final static int STARTING_LEVEL = 2;
+    private final static int STARTING_LEVEL = 4;
     private final static long DISAPPOINT_TIME = 20000;
     private final static boolean DEBUG_MODE = true;
     private final static boolean EDIT_MODE = false;
     private static boolean DRAW_LINES = false || EDIT_MODE;
     private static boolean SHOW_OPOSITE = false;
     public final static boolean FOR_COMPILATION = false;
+    
+    public static int NUM_LEVELS = -1;
     
     
     private Circle lastClick;
@@ -48,6 +50,7 @@ public class Game extends BasicGame {
     public Game() throws SlickException {
         super("ᗡƎƧЯƎVƎЯ");
         levels = new LevelLoader().loadLevels();
+        NUM_LEVELS = levels.size();
     }
 
 

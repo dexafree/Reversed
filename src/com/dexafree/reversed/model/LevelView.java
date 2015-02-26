@@ -111,7 +111,7 @@ public class LevelView {
 
         ArrayList<Mirror> mirrorsModel = level.getMirrors();
         for(Mirror m : mirrorsModel){
-            mirrors.add(new MirrorView(m));
+            mirrors.add(new MirrorView(m, manager));
         }
     }
 

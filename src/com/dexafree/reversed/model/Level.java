@@ -13,10 +13,11 @@ public class Level {
     private ArrayList<GameObject> objects;
     private Point start;
     private Exit exit;
+    private int numLevel;
 
     public Level(String title, String endingSentence, float[] levelStructure, ArrayList<Platform> platforms,
                  ArrayList<Mirror> mirrors, ArrayList<Platform> staticShapes,
-                 ArrayList<GameObject> objects, Point start, Exit exit) {
+                 ArrayList<GameObject> objects, Point start, Exit exit, int numLevel) {
         this.title = title;
         this.endingSentence = endingSentence;
         this.levelStructure = levelStructure;
@@ -26,6 +27,7 @@ public class Level {
         this.objects = objects;
         this.start = start;
         this.exit = exit;
+        this.numLevel = numLevel;
     }
 
     public String getTitle() {
@@ -51,7 +53,6 @@ public class Level {
     public ArrayList<Platform> getStaticShapes() {
         return staticShapes;
     }
-
     
     public ArrayList<GameObject> getObjects(){
         return objects;
@@ -63,5 +64,9 @@ public class Level {
 
     public Exit getExit() {
         return exit;
+    }
+
+    public int getNumLevel() {
+        return numLevel;
     }
 }
