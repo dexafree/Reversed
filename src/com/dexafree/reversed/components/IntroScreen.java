@@ -64,7 +64,7 @@ public class IntroScreen {
     }
     
     public void render(GameContainer gc, Graphics g){
-        
+
         logo.draw(logoX, 100);
         
         int initPosition = 300;

@@ -2,6 +2,7 @@ package com.dexafree.reversed.components;
 
 import com.dexafree.reversed.Main;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
@@ -13,11 +14,12 @@ public class PlotScreen {
     
     private IPlotScreen callback;
     
-    private final static int CHARACTER_TIME = 100;
+    private final static int CHARACTER_TIME = 50;
     private int elapsedTime;
     private int currentChar;
     private String plotString;
     private String currentString;
+    private int centerY = -1;
     
     public PlotScreen(String plotString, IPlotScreen callback){
         this.callback = callback;
@@ -47,12 +49,17 @@ public class PlotScreen {
     }
     
     public void render(GameContainer gc, Graphics g){
+        
+        if(centerY == -1){
+            Font f = g.getFont();
+            centerY = (Main.WIDTH / 2) - (f.getWidth(plotString) / 2);
+        }
 
         g.setColor(Color.black);
         g.drawRect(0, 0, Main.WIDTH, Main.HEIGHT);
         
         g.setColor(Color.white);
-        g.drawString(currentString, 300, 300);
+        g.drawString(currentString, 300, centerY);
         
     }
     
