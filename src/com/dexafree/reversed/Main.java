@@ -16,7 +16,7 @@ public class Main {
         try {
             AppGameContainer app = new AppGameContainer(new Game());
             app.setDisplayMode(WIDTH, HEIGHT, false);
-            app.setShowFPS(true);
+            app.setShowFPS(false);
             app.setVSync(true);
             //app.setTargetFrameRate(60);
             app.start();

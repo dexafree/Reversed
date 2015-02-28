@@ -50,7 +50,7 @@ public class EndScreen {
             acumTime = 0;
         }
         
-        if(acumTime > SENTENCE_TIME && STATE == SENTENCES.length){
+        if(acumTime > 5000 && STATE == SENTENCES.length){
             callback.onEndScreenFinished();
         }
         

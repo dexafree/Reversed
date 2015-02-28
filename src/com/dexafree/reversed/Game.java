@@ -155,8 +155,8 @@ public class Game extends BasicGame {
 
                     if (!isWin) {
 
-                        drawDebugLines(gc, g, LINES_SIZE);
-                        showMouseInfo(gc, g);
+                        //drawDebugLines(gc, g, LINES_SIZE);
+                        //showMouseInfo(gc, g);
 
                         if (DEBUG_MODE) {
 
@@ -176,7 +176,7 @@ public class Game extends BasicGame {
                         }
 
                         if (timeSinceLevelStarted > DISAPPOINT_TIME) {
-                            currentLevelView.drawDisappoint(g);
+                            //currentLevelView.drawDisappoint(g);
                         }
 
                     } else {
@@ -259,15 +259,6 @@ public class Game extends BasicGame {
                             }
 
                         }
-                        if (gc.getInput().isKeyDown(Input.KEY_L) && timeSinceLastFlip > FLIP_TIME) {
-                            DRAW_LINES = !DRAW_LINES;
-                            timeSinceLastFlip = 0;
-                        }
-
-                        if (gc.getInput().isKeyDown(Input.KEY_P) && timeSinceLastFlip > FLIP_TIME) {
-                            SHOW_OPOSITE = !SHOW_OPOSITE;
-                            timeSinceLastFlip = 0;
-                        }
                     } else {
                         plotScreen.update(gc, delta);
                     }
@@ -330,7 +321,7 @@ public class Game extends BasicGame {
     private void showWin(GameContainer gc, Graphics g){
         g.setColor(Color.white);
         if(currentLevelView.areAllObjectsPicked()) {
-            g.drawString("WIN", 50, 40);
+            //g.drawString("WIN", 50, 40);
         } else {
             g.drawString("YOU HAVE NOT PICKED ALL OBJECTS!", 50, 40);
         }

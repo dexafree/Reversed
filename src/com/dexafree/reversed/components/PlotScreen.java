@@ -42,7 +42,7 @@ public class PlotScreen {
             elapsedTime = 0;
         }
 
-        if(currentChar == plotString.length() && elapsedTime >= 1000){
+        if(currentChar == plotString.length() && elapsedTime >= 2500){
             callback.onPlotFinished();
         }
         

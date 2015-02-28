@@ -77,7 +77,7 @@ public class LevelView {
         
         renderEnd(g);
         
-        renderInfo(g);
+        //renderInfo(g);
     }
 
     public void update(GameContainer gc, int delta) throws SlickException {
