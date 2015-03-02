@@ -20,5 +20,5 @@ The game was made by using the LWJGL version [2.9.1](http://sourceforge.net/proj
 
 
 ## Art Credits
-* Depth: Character design, mirror design, door design
-* JRoig24: Tiles design
+* **Depth**: Character design, mirror design, door design
+* **JRoig24**: Tiles design
