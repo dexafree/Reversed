@@ -3,7 +3,7 @@ This game was made by Dexafree for the Mini Ludum Dare #57
 
 It uses the Java [Slick2D](http://slick.ninjacave.com/) library (jars included).
 
-The code is provided without any warranty or support, just for the sake of being an Open Source game.
+The code is provided without any warranty or support, I've upload it just for the sake of being an Open Source game.
 
 If you are crazy enough to hack it, feel free to do whatever you want with it!
 
