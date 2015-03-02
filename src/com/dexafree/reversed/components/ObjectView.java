@@ -29,8 +29,6 @@ public class ObjectView {
     
     public void render(Graphics g){
         if(!picked) {
-            /*g.setColor(color);
-            g.fill(shape);*/
             mImage.draw(shape.getX(), shape.getY(), color);
         }
     }

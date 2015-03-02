@@ -274,8 +274,6 @@ public class LevelView {
     }
 
     private void renderLevel(Graphics g){
-        //g.setBackground(Color.green);
-        
         g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT, backgroundImage, 0, 0);
         
         g.setColor(Color.black);
@@ -305,7 +303,6 @@ public class LevelView {
     }
 
     private void renderStaticShapes(Graphics g){
-        /*g.setColor(Color.orange);*/
         for(Shape s : staticShapes){
             g.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight(), staticTileImage, 0, 0);
         }

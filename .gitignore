@@ -11,3 +11,4 @@ gradle
 out
 library/build
 compilation
+assets/raw

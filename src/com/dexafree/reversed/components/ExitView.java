@@ -15,13 +15,10 @@ public class ExitView extends BaseView {
     public ExitView(Exit exit, AssetManager manager){
         this.exit = exit;
         mShape = getPlatform(exit.getX(), exit.getY(), 1, 2);
-        //exitImage = numLevel == Game.NUM_LEVELS-1 ? manager.getGameExitImage() : manager.getExitImage();
         exitImage = manager.getExitImage();
     }
     
     public void render(Graphics g){
-        /*g.setColor(Color.cyan);
-        g.fill(mShape);*/
         float x = mShape.getX();
         float y = mShape.getY();
         

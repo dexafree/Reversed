@@ -22,12 +22,7 @@ public class PlatformView extends BaseView {
     }
     
     public void render(Graphics g){
-        /*g.setColor(Color.green);
-        g.fill(mShape);*/
-        
         g.fillRect(mShape.getX(), mShape.getY(), mShape.getWidth(), mShape.getHeight(), mImage, 0, 0);
-        //mImage.draw(mShape.getX(), mShape.getY());
-        //mImage.drawEmbedded(mShape.getX(), mShape.getY(), mShape.getWidth(), mShape.getHeight());
     }
     
 }

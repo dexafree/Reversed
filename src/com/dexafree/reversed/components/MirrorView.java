@@ -30,8 +30,6 @@ public class MirrorView extends BaseView{
     
     
     public void render(Graphics g){
-        /*g.setColor(color);
-        g.fill(mShape);*/
         mImage.draw(mShape.getX(), mShape.getY(), color);
     }
     

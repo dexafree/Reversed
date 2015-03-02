@@ -9,10 +9,6 @@ public class Main {
     public final static int HEIGHT = 768;
 
     public static void main(String[] args) {
-        //System.setProperty("org.lwjgl.librarypath", new File( new File( System.getProperty("user.dir") , "native") , LWJGLUtil.getPlatformName() ).getAbsolutePath() );
-        //System.setProperty("org.lwjgl.librarypath", new File("~/Home/SDKs/lwjgl/natives/macosx").getAbsolutePath());
-
-
         try {
             AppGameContainer app = new AppGameContainer(new Game());
             app.setDisplayMode(WIDTH, HEIGHT, false);
