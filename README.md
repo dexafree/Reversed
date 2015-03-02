@@ -1,5 +1,5 @@
 # Reversed
-This game was made by Dexafree, and participated in the Mini Ludum Dare #57
+This game was made by Dexafree for the Mini Ludum Dare #57
 
 It uses the Java [Slick2D](http://slick.ninjacave.com/) library (jars included).
 
